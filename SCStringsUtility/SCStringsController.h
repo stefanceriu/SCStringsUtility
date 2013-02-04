@@ -8,8 +8,8 @@
 
 typedef enum {
     SCSourceTypeInvalid,
+    SCSourceTypeXcodeProject,
     SCSourceTypeCSV,
-    SCSourceTypeXcodeProject
 }SCSourceType;
 
 @protocol SCStringsControllerDelegate;

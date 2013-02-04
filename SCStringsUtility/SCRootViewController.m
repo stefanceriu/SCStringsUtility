@@ -9,6 +9,9 @@
 #import "SCRootViewController.h"
 #import "SCStringsController.h"
 
+static NSString *kFileTypeXcodeProject = @"xcodeproj";
+static NSString *kFileTypeCSV = @"csv";
+
 @interface SCRootViewController () <NSSplitViewDelegate, NSTextDelegate, SCStringsControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet NSSplitView *splitView;
@@ -28,6 +31,8 @@
 
 @property (nonatomic, assign) IBOutlet NSTextView *textView;
 @property (nonatomic, strong) SCStringsController *stringsController;
+
+@property (nonatomic, assign) SCSourceType selectedFileType;
 
 @end
 
@@ -60,7 +65,6 @@
 - (void)reset
 {
     [self.stringsController reset];
-    
     self.textView.string = @"";
 }
 
@@ -82,42 +86,56 @@
 
 - (IBAction)onExportClick:(id)sender
 {
-    if(self.stringsController.sourceType == SCSourceTypeInvalid) return;
     
-    if(self.stringsController.sourceType == SCSourceTypeXcodeProject) {
-        NSSavePanel *savePanel = [NSSavePanel savePanel];
-        [savePanel setCanCreateDirectories:YES];
-        [savePanel setAllowedFileTypes:@[@"csv"]];
-        [savePanel setAccessoryView:self.saveToCSVPanelAccessoryView];
-        
-        if([savePanel runModal] != NSOKButton) return;
-        
-        BOOL includeComments = ((NSButton*)[self.saveToCSVPanelAccessoryView.subviews objectAtIndex:0]).state;
-        BOOL useKeyForEmptyTranslations = ((NSButton*)[self.saveToCSVPanelAccessoryView.subviews objectAtIndex:1]).state;
-        
-        [self.stringsController generateCSVAtPath:[[savePanel URL] path] includeComments:includeComments useKeyForEmptyTranslations:useKeyForEmptyTranslations success:^{
+    switch (self.stringsController.sourceType)
+    {
+        case SCSourceTypeInvalid:
+        {
+            return;
+        }
+        case SCSourceTypeXcodeProject:
+        {
+            NSSavePanel *savePanel = [NSSavePanel savePanel];
+            [savePanel setCanCreateDirectories:YES];
+            [savePanel setAllowedFileTypes:@[@"csv"]];
+            [savePanel setAccessoryView:self.saveToCSVPanelAccessoryView];
             
-        } failure:^(NSError *error) {
-            NSLog(@"Could not generate CSV file %@", error);
-        }];
-    }
-    else {
-        
-        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-        [openPanel setCanChooseDirectories:YES];
-        [openPanel setCanChooseFiles:NO];
-        [openPanel setCanCreateDirectories:YES];
-        [openPanel setAllowsMultipleSelection:NO];
-        
-        if([openPanel runModal] != NSOKButton) return;
-        
-        [self.stringsController generateStringFilesAtPath:[[openPanel URL] path] success:^{
+            if([savePanel runModal] != NSOKButton) return;
             
-        } failure:^(NSError *error) {
-            NSLog(@"Could not generate string files %@", error);
-        }];
+            BOOL includeComments = ((NSButton*)[self.saveToCSVPanelAccessoryView.subviews objectAtIndex:0]).state;
+            BOOL useKeyForEmptyTranslations = ((NSButton*)[self.saveToCSVPanelAccessoryView.subviews objectAtIndex:1]).state;
+            
+            [self.stringsController generateCSVAtPath:[[savePanel URL] path] includeComments:includeComments useKeyForEmptyTranslations:useKeyForEmptyTranslations success:^{
+                
+            } failure:^(NSError *error) {
+                NSLog(@"Could not generate CSV file %@", error);
+            }];
+            
+            break;
+        }
+        case SCSourceTypeCSV:
+        {
+            NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+            [openPanel setCanChooseDirectories:YES];
+            [openPanel setCanChooseFiles:NO];
+            [openPanel setCanCreateDirectories:YES];
+            [openPanel setAllowsMultipleSelection:NO];
+            
+            if([openPanel runModal] != NSOKButton) return;
+            
+            [self.stringsController generateStringFilesAtPath:[[openPanel URL] path] success:^{
+                
+            } failure:^(NSError *error) {
+                NSLog(@"Could not generate string files %@", error);
+            }];
+            
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
-    
 }
 
 - (IBAction)onSaveClick:(id)sender
@@ -140,17 +158,16 @@
     }
 }
 
-- (IBAction)onOpenProjectClick:(id)sender
+- (IBAction)onOpenClick:(id)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    [openPanel setDelegate:(id <NSOpenSavePanelDelegate>)self];
     [openPanel setCanChooseDirectories:NO];
     [openPanel setCanChooseFiles:YES];
     [openPanel setCanCreateDirectories:NO];
     [openPanel setAllowsMultipleSelection:NO];
     
-    [openPanel setAllowedFileTypes:@[@"xcodeproj"]];
-    
-    [openPanel setAccessoryView:self.openProjectPanelAccessoryView];
+    [openPanel setAllowedFileTypes:@[@"xcodeproj", @"csv"]];
     
     NSInteger result = [openPanel runModal];
     if(result != NSOKButton) return;
@@ -160,40 +177,74 @@
     
     [self reset];
     
-    BOOL includePositionalParamters = ((NSButton*)[self.openProjectPanelAccessoryView.subviews objectAtIndex:0]).state;
+    switch (self.selectedFileType) {
+        case SCSourceTypeXcodeProject:
+        {
+            if(!openPanel.accessoryView) {
+                SCLog(@"Unkown error");
+                return;
+            }
+            
+            BOOL includePositionalParameters = ((NSButton*)[self.openProjectPanelAccessoryView.subviews objectAtIndex:0]).state;
+            
+            NSString *routine = ((NSTextField*)[self.openProjectPanelAccessoryView.subviews lastObject]).stringValue;
+            if(![routine length]) routine = nil;
+            
+            [self.stringsController importProjectAtPath:[[openPanel URL] path]
+                                   positionalParameters:includePositionalParameters
+                                      genstringsRoutine:routine success:^{ [self reloadData];}
+                                                failure:^(NSError *error) { NSLog(@"Could not import Xcode project %@", error);}];
+            break;
+        }
+        case SCSourceTypeCSV:
+        {
+            [self.stringsController importCSVFileAtPath:[[openPanel URL] path]
+                                                success:^{ [self reloadData];}
+                                                failure:^(NSError *error) { NSLog(@"Could not import CSV file %@",error);}];
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
     
-    NSString *routine = ((NSTextField*)[self.openProjectPanelAccessoryView.subviews lastObject]).stringValue;
-    if(![routine length]) routine = nil;
-    
-    [self.stringsController importProjectAtPath:[[openPanel URL] path]
-                           positionalParameters:includePositionalParamters
-                              genstringsRoutine:routine success:^{ [self reloadData];}
-                                        failure:^(NSError *error) { NSLog(@"Could not import Xcode project %@", error);}];
+    self.selectedFileType = SCSourceTypeInvalid;
 }
 
-- (IBAction)onImportClick:(id)sender
+- (void)panelSelectionDidChange:(NSOpenPanel*)sender
 {
-    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    [openPanel setCanChooseDirectories:NO];
-    [openPanel setCanChooseFiles:YES];
-    [openPanel setCanCreateDirectories:NO];
-    [openPanel setAllowsMultipleSelection:NO];
+    static NSDictionary *extensionToType;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        extensionToType = (@{kFileTypeXcodeProject : @(SCSourceTypeXcodeProject),
+                           kFileTypeCSV : @(SCSourceTypeCSV),
+                           });
+    });
     
-    [openPanel setAllowedFileTypes:@[@"csv"]];
+    NSString *extension = [[sender.URL path] pathExtension];
     
-    NSInteger result = [openPanel runModal];
-    if(result != NSOKButton) return;
+    if(extension.length == 0) return;
     
-    [self.progressIndicator    setAlphaValue:1.0f];
-    [self.progressIndicator    startAnimation:self];
+    SCSourceType selectedType = [extensionToType[extension] intValue];
+    switch (selectedType) {
+        case SCSourceTypeXcodeProject:
+        {
+            [sender setAccessoryView:self.openProjectPanelAccessoryView];
+            break;
+        }
+        case SCSourceTypeCSV:
+        {
+            [sender setAccessoryView:nil];
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
     
-    [self reset];
-    
-    [self.stringsController importCSVFileAtPath:[[openPanel URL] path] success:^{
-        [self reloadData];
-    } failure:^(NSError *error) {
-        NSLog(@"Could not import CSV file %@",error);
-    }];
+    self.selectedFileType = selectedType;
 }
 
 typedef enum {
