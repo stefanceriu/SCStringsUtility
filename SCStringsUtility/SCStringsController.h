@@ -6,17 +6,11 @@
 //  Copyright (c) 2013 Stefan Ceriu. All rights reserved.
 //
 
-typedef enum {
-    SCSourceTypeInvalid,
-    SCSourceTypeXcodeProject,
-    SCSourceTypeCSV,
-}SCSourceType;
-
 @protocol SCStringsControllerDelegate;
 
 @interface SCStringsController : NSObject <NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDataSource, NSTableViewDelegate>
 
-@property (nonatomic, assign, readonly) SCSourceType sourceType;
+@property (nonatomic, assign, readonly) SCFileType sourceType;
 
 @property (nonatomic, assign) id<SCStringsControllerDelegate> delegate;
 

@@ -9,8 +9,12 @@
 #import "SCRootViewController.h"
 #import "SCStringsController.h"
 
+#import "SCOpenAccessoryView.h"
+#import "SCExportAccessoryView.h"
+
 static NSString *kFileTypeXcodeProject = @"xcodeproj";
 static NSString *kFileTypeCSV = @"csv";
+static NSString *kFileTypeXML = @"xml";
 
 @interface SCRootViewController () <NSSplitViewDelegate, NSTextDelegate, SCStringsControllerDelegate>
 
@@ -23,16 +27,19 @@ static NSString *kFileTypeCSV = @"csv";
 @property (nonatomic, weak) IBOutlet NSButton *saveButton;
 @property (nonatomic, weak) IBOutlet NSButton *exportButton;
 
-@property (nonatomic, weak) IBOutlet NSView *openProjectPanelAccessoryView;
-@property (nonatomic, weak) IBOutlet NSView *saveToCSVPanelAccessoryView;
-
 @property (nonatomic, weak) IBOutlet NSSearchField *searchField;
 @property (nonatomic, weak) IBOutlet NSButton *searchKeysOnlyCheckboxButton;
 
 @property (nonatomic, assign) IBOutlet NSTextView *textView;
+
+@property (nonatomic, weak) IBOutlet SCOpenAccessoryView *openPanelAccessoryView;
+@property (nonatomic, weak) IBOutlet SCExportAccessoryView *exportPanelAccessoryView;
+
+@property (nonatomic, strong) __block NSSavePanel *exportPanel;
+
 @property (nonatomic, strong) SCStringsController *stringsController;
 
-@property (nonatomic, assign) SCSourceType selectedFileType;
+@property (nonatomic, assign) SCFileType selectedFileType;
 
 @end
 
@@ -86,63 +93,119 @@ static NSString *kFileTypeCSV = @"csv";
 
 - (IBAction)onExportClick:(id)sender
 {
-    
-    switch (self.stringsController.sourceType)
+    if(!self.exportPanel)
     {
-        case SCSourceTypeInvalid:
+        switch (self.stringsController.sourceType)
         {
-            return;
+            case SCFileTypeXcodeProject:
+            {
+                [self.exportPanelAccessoryView setSelectedExportType:SCFileTypeCSV];
+                break;
+            }
+            case SCFileTypeCSV:
+            {
+                [self.exportPanelAccessoryView setSelectedExportType:SCFileTypeXcodeProject];
+                break;
+            }
+            case SCFileTypeXML:
+            {
+                [self.exportPanelAccessoryView setSelectedExportType:SCFileTypeXcodeProject];
+                break;
+            }
+            default:
+            {
+                [self.exportPanelAccessoryView setSelectedExportType:SCFileTypeCSV];
+                break;
+            }
         }
-        case SCSourceTypeXcodeProject:
+    }
+    else {
+        
+        [self.exportPanel setCanCreateDirectories:YES];
+        [self.exportPanel setAccessoryView:self.exportPanelAccessoryView];
+        
+        [self.exportPanel beginWithCompletionHandler:^(NSInteger result) {
+            
+            if(result != NSOKButton) return;
+            
+            switch ([self.exportPanelAccessoryView selectedExportType])
+            {
+                case SCFileTypeXcodeProject:
+                {
+                    [self.stringsController generateStringFilesAtPath:[[self.exportPanel URL] path] success:^{
+                        
+                    } failure:^(NSError *error) {
+                        NSLog(@"Could not generate string files %@", error);
+                    }];
+                    
+                    break;
+                }
+                case SCFileTypeCSV:
+                {
+                    BOOL includeComments = [self.exportPanelAccessoryView shouldIncludeComments];
+                    BOOL useKeyForMissingTranslations = [self.exportPanelAccessoryView shouldUseKeyForMissingTranslations];
+                    
+                    [self.stringsController generateCSVAtPath:[[self.exportPanel URL] path] includeComments:includeComments useKeyForEmptyTranslations:useKeyForMissingTranslations success:^{
+                        
+                    } failure:^(NSError *error) {
+                        NSLog(@"Could not generate CSV file %@", error);
+                    }];
+                    
+                    break;
+                }
+                case SCFileTypeXML:
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }];
+    }
+}
+
+- (void)exportAccessoryView:(SCExportAccessoryView*)view didSelectFormatType:(SCFileType)type
+{
+    switch (type) {
+        case SCFileTypeXcodeProject:
         {
-            NSSavePanel *savePanel = [NSSavePanel savePanel];
-            [savePanel setCanCreateDirectories:YES];
-            [savePanel setAllowedFileTypes:@[@"csv"]];
-            [savePanel setAccessoryView:self.saveToCSVPanelAccessoryView];
+            [self.exportPanel close];
             
-            if([savePanel runModal] != NSOKButton) return;
-            
-            BOOL includeComments = ((NSButton*)[self.saveToCSVPanelAccessoryView.subviews objectAtIndex:0]).state;
-            BOOL useKeyForEmptyTranslations = ((NSButton*)[self.saveToCSVPanelAccessoryView.subviews objectAtIndex:1]).state;
-            
-            [self.stringsController generateCSVAtPath:[[savePanel URL] path] includeComments:includeComments useKeyForEmptyTranslations:useKeyForEmptyTranslations success:^{
-                
-            } failure:^(NSError *error) {
-                NSLog(@"Could not generate CSV file %@", error);
-            }];
-            
-            break;
-        }
-        case SCSourceTypeCSV:
-        {
-            NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-            [openPanel setCanChooseDirectories:YES];
-            [openPanel setCanChooseFiles:NO];
-            [openPanel setCanCreateDirectories:YES];
-            [openPanel setAllowsMultipleSelection:NO];
-            
-            if([openPanel runModal] != NSOKButton) return;
-            
-            [self.stringsController generateStringFilesAtPath:[[openPanel URL] path] success:^{
-                
-            } failure:^(NSError *error) {
-                NSLog(@"Could not generate string files %@", error);
-            }];
+            self.exportPanel = [NSOpenPanel openPanel];
+            [(NSOpenPanel*)self.exportPanel setCanChooseFiles:NO];
+            [(NSOpenPanel*)self.exportPanel setCanChooseDirectories:YES];
             
             break;
         }
         default:
         {
+            BOOL shouldReload = !self.exportPanel || [self.exportPanel isKindOfClass:[NSOpenPanel class]];
+            
+            if(shouldReload)
+            {
+                [self.exportPanel close];
+                
+                self.exportPanel = [NSSavePanel savePanel];
+                [self.exportPanel setCanCreateDirectories:YES];
+            }
+            
+            [self.exportPanel setAllowedFileTypes:(type == SCFileTypeXML ? @[@"xml"] : @[@"csv"])];
+            
             break;
         }
     }
+    
+    if(!self.exportPanel.isVisible)
+        [self onExportClick:nil];
 }
 
 - (IBAction)onSaveClick:(id)sender
 {
-    if(self.stringsController.sourceType == SCSourceTypeInvalid) return;
+    if(self.stringsController.sourceType == SCFileTypeInvalid) return;
     
-    if(self.stringsController.sourceType == SCSourceTypeXcodeProject) {
+    if(self.stringsController.sourceType == SCFileTypeXcodeProject) {
         [self.stringsController generateStringFilesAtPath:nil success:^{
             
         } failure:^(NSError *error) {
@@ -178,17 +241,15 @@ static NSString *kFileTypeCSV = @"csv";
     [self reset];
     
     switch (self.selectedFileType) {
-        case SCSourceTypeXcodeProject:
+        case SCFileTypeXcodeProject:
         {
             if(!openPanel.accessoryView) {
                 SCLog(@"Unkown error");
                 return;
             }
             
-            BOOL includePositionalParameters = ((NSButton*)[self.openProjectPanelAccessoryView.subviews objectAtIndex:0]).state;
-            
-            NSString *routine = ((NSTextField*)[self.openProjectPanelAccessoryView.subviews lastObject]).stringValue;
-            if(![routine length]) routine = nil;
+            BOOL includePositionalParameters = [self.openPanelAccessoryView shouldAddPositionalParameters];
+            NSString *routine = [self.openPanelAccessoryView genstringsRoutine];
             
             [self.stringsController importProjectAtPath:[[openPanel URL] path]
                                    positionalParameters:includePositionalParameters
@@ -196,12 +257,16 @@ static NSString *kFileTypeCSV = @"csv";
                                                 failure:^(NSError *error) { NSLog(@"Could not import Xcode project %@", error);}];
             break;
         }
-        case SCSourceTypeCSV:
+        case SCFileTypeCSV:
         {
             [self.stringsController importCSVFileAtPath:[[openPanel URL] path]
                                                 success:^{ [self reloadData];}
                                                 failure:^(NSError *error) { NSLog(@"Could not import CSV file %@",error);}];
             break;
+        }
+        case SCFileTypeXML:
+        {
+            
         }
         default:
         {
@@ -209,7 +274,7 @@ static NSString *kFileTypeCSV = @"csv";
         }
     }
     
-    self.selectedFileType = SCSourceTypeInvalid;
+    self.selectedFileType = SCFileTypeInvalid;
 }
 
 - (void)panelSelectionDidChange:(NSOpenPanel*)sender
@@ -217,8 +282,9 @@ static NSString *kFileTypeCSV = @"csv";
     static NSDictionary *extensionToType;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        extensionToType = (@{kFileTypeXcodeProject : @(SCSourceTypeXcodeProject),
-                           kFileTypeCSV : @(SCSourceTypeCSV),
+        extensionToType = (@{kFileTypeXcodeProject : @(SCFileTypeXcodeProject),
+                           kFileTypeCSV : @(SCFileTypeCSV),
+                           kFileTypeXML : @(SCFileTypeXML)
                            });
     });
     
@@ -226,14 +292,19 @@ static NSString *kFileTypeCSV = @"csv";
     
     if(extension.length == 0) return;
     
-    SCSourceType selectedType = [extensionToType[extension] intValue];
+    SCFileType selectedType = [extensionToType[extension] intValue];
     switch (selectedType) {
-        case SCSourceTypeXcodeProject:
+        case SCFileTypeXcodeProject:
         {
-            [sender setAccessoryView:self.openProjectPanelAccessoryView];
+            [sender setAccessoryView:self.openPanelAccessoryView];
             break;
         }
-        case SCSourceTypeCSV:
+        case SCFileTypeCSV:
+        {
+            [sender setAccessoryView:nil];
+            break;
+        }
+        case SCFileTypeXML:
         {
             [sender setAccessoryView:nil];
             break;
@@ -332,6 +403,57 @@ typedef enum {
     });
 }
 
+#pragma mark - Properties
+
+- (SCOpenAccessoryView *)openPanelAccessoryView
+{
+    if(!_openPanelAccessoryView)
+    {
+        Class class = [SCOpenAccessoryView class];
+        
+        NSArray *items;
+        
+        NSNib *nib = [[NSNib alloc] initWithNibNamed:NSStringFromClass(class) bundle:nil];
+        [nib instantiateNibWithOwner:self topLevelObjects:&items];
+        
+        [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if([obj isKindOfClass:class])
+            {
+                _openPanelAccessoryView = obj;
+                stop = YES;
+            }
+            
+        }];
+        
+    }
+    
+    return _openPanelAccessoryView;
+}
+
+- (SCExportAccessoryView *)exportPanelAccessoryView
+{
+    if(!_exportPanelAccessoryView)
+    {
+        Class class = [SCExportAccessoryView class];
+        
+        NSArray *items;
+        
+        NSNib *nib = [[NSNib alloc] initWithNibNamed:NSStringFromClass(class) bundle:nil];
+        [nib instantiateNibWithOwner:nil topLevelObjects:&items];
+        
+        [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if([obj isKindOfClass:class])
+            {
+                _exportPanelAccessoryView = obj;
+                [_exportPanelAccessoryView setDelegate:(id<SCExportAccessoryViewDelegate>)self];
+                stop = YES;
+            }
+        }];
+    }
+    
+    return _exportPanelAccessoryView;
+}
+
 #pragma mark - Others
 
 - (void)windowDidResize:(NSNotification *)notification
@@ -362,11 +484,11 @@ typedef enum
         }
         case SCMenuItemSave:
         {
-            return (self.stringsController.sourceType != SCSourceTypeInvalid);
+            return (self.stringsController.sourceType != SCFileTypeInvalid);
         }
         case SCMenuItemExport:
         {
-            return (self.stringsController.sourceType != SCSourceTypeInvalid);
+            return (self.stringsController.sourceType != SCFileTypeInvalid);
         }
         case SCMenuItemFind:
         {

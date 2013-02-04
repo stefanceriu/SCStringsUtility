@@ -31,7 +31,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
 @property (nonatomic, strong) XCProject *project;
 @property (nonatomic, strong) NSString *csvFilePath;
 
-@property (nonatomic, assign) SCSourceType sourceType;
+@property (nonatomic, assign) SCFileType sourceType;
 
 @property (nonatomic, strong) NSMutableDictionary *translationFiles;
 @property (nonatomic, strong) OrderedDictionary *filteredTranslationsDictionary;
@@ -61,7 +61,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
 {
     self.translationsDictionary = [OrderedDictionary dictionary];
     self.translationFiles = [NSMutableDictionary dictionary];
-    self.sourceType = SCSourceTypeInvalid;
+    self.sourceType = SCFileTypeInvalid;
     
     [self.outlineView reloadData];
     
@@ -79,7 +79,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
 {
     self.csvFilePath = path;
     self.project = nil;
-    self.sourceType = SCSourceTypeCSV;
+    self.sourceType = SCFileTypeCSV;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         
@@ -167,7 +167,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
 {
     self.project = [[XCProject alloc] initWithFilePath:path];
     self.csvFilePath = nil;
-    self.sourceType = SCSourceTypeXcodeProject;
+    self.sourceType = SCFileTypeXcodeProject;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSArray *files = [self.project.files filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(XCSourceFile *evaluatedObject, NSDictionary *bindings) {

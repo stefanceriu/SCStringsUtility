@@ -14,18 +14,22 @@
 		1843F4511650EB9900CEDBEF /* icon-import.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44D1650EB9900CEDBEF /* icon-import.png */; };
 		1843F4521650EB9900CEDBEF /* icon-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44E1650EB9900CEDBEF /* icon-open.png */; };
 		1843F4531650EB9900CEDBEF /* icon-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44F1650EB9900CEDBEF /* icon-save.png */; };
-		1866F723163B1913003CF110 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1866F722163B1913003CF110 /* OrderedDictionary.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186758CC1654C83F00BEE1E1 /* MainMenu.xib */; };
 		1878321816BECEC800A8C760 /* XcodeEditor.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18F0D44F16BECE6800CC0264 /* XcodeEditor.framework */; };
-		18A78948163ABBDC00E305D0 /* NSData+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A78947163ABBDC00E305D0 /* NSData+SCAdditions.m */; };
-		18B65774162AEB51009282AD /* NSString+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B65773162AEB51009282AD /* NSString+SCAdditions.m */; };
-		18B65782162B4850009282AD /* SCCSVWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B65781162B4850009282AD /* SCCSVWriter.m */; };
+		18D185A516C050E00082E573 /* NSData+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859216C050E00082E573 /* NSData+SCAdditions.m */; };
+		18D185A616C050E00082E573 /* NSString+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859416C050E00082E573 /* NSString+SCAdditions.m */; };
+		18D185A716C050E00082E573 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859616C050E00082E573 /* OrderedDictionary.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18D185A816C050E00082E573 /* SCCSVWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859916C050E00082E573 /* SCCSVWriter.m */; };
+		18D185A916C050E00082E573 /* SCReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859B16C050E00082E573 /* SCReader.m */; };
+		18D185AA16C050E00082E573 /* SCStringsWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859D16C050E00082E573 /* SCStringsWriter.m */; };
+		18D185AB16C050E00082E573 /* SCExportAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D185A016C050E00082E573 /* SCExportAccessoryView.m */; };
+		18D185AC16C050E00082E573 /* SCExportAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D185A116C050E00082E573 /* SCExportAccessoryView.xib */; };
+		18D185AD16C050E00082E573 /* SCOpenAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D185A316C050E00082E573 /* SCOpenAccessoryView.m */; };
+		18D185AE16C050E00082E573 /* SCOpenAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18D185A416C050E00082E573 /* SCOpenAccessoryView.xib */; };
 		18D36750162772B500B6BACE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D3674F162772B500B6BACE /* Cocoa.framework */; };
 		18D3675C162772B500B6BACE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D3675B162772B500B6BACE /* main.m */; };
 		18D36760162772B600B6BACE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 18D3675E162772B600B6BACE /* Credits.rtf */; };
 		18D36763162772B600B6BACE /* SCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D36762162772B600B6BACE /* SCAppDelegate.m */; };
-		18D36773162772E600B6BACE /* SCReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D3676F162772E600B6BACE /* SCReader.m */; };
-		18D36774162772E600B6BACE /* SCStringsWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D36771162772E600B6BACE /* SCStringsWriter.m */; };
 		18D9AFAB16BD4E98008601C0 /* SCStringsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D9AFAA16BD4E98008601C0 /* SCStringsController.m */; };
 		18F0D45316BECE8300CC0264 /* XcodeEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F0D44F16BECE6800CC0264 /* XcodeEditor.framework */; };
 /* End PBXBuildFile section */
@@ -52,15 +56,25 @@
 		1843F44D1650EB9900CEDBEF /* icon-import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-import.png"; sourceTree = "<group>"; };
 		1843F44E1650EB9900CEDBEF /* icon-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-open.png"; sourceTree = "<group>"; };
 		1843F44F1650EB9900CEDBEF /* icon-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-save.png"; sourceTree = "<group>"; };
-		1866F721163B1913003CF110 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderedDictionary.h; sourceTree = "<group>"; };
-		1866F722163B1913003CF110 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderedDictionary.m; sourceTree = "<group>"; };
 		186758CC1654C83F00BEE1E1 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
-		18A78946163ABBDC00E305D0 /* NSData+SCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SCAdditions.h"; sourceTree = "<group>"; };
-		18A78947163ABBDC00E305D0 /* NSData+SCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SCAdditions.m"; sourceTree = "<group>"; };
-		18B65772162AEB51009282AD /* NSString+SCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SCAdditions.h"; sourceTree = "<group>"; };
-		18B65773162AEB51009282AD /* NSString+SCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SCAdditions.m"; sourceTree = "<group>"; };
-		18B65780162B4850009282AD /* SCCSVWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCCSVWriter.h; sourceTree = "<group>"; };
-		18B65781162B4850009282AD /* SCCSVWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCCSVWriter.m; sourceTree = "<group>"; };
+		18D1859116C050E00082E573 /* NSData+SCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SCAdditions.h"; sourceTree = "<group>"; };
+		18D1859216C050E00082E573 /* NSData+SCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SCAdditions.m"; sourceTree = "<group>"; };
+		18D1859316C050E00082E573 /* NSString+SCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SCAdditions.h"; sourceTree = "<group>"; };
+		18D1859416C050E00082E573 /* NSString+SCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SCAdditions.m"; sourceTree = "<group>"; };
+		18D1859516C050E00082E573 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderedDictionary.h; sourceTree = "<group>"; };
+		18D1859616C050E00082E573 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderedDictionary.m; sourceTree = "<group>"; };
+		18D1859816C050E00082E573 /* SCCSVWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCCSVWriter.h; sourceTree = "<group>"; };
+		18D1859916C050E00082E573 /* SCCSVWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCCSVWriter.m; sourceTree = "<group>"; };
+		18D1859A16C050E00082E573 /* SCReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCReader.h; sourceTree = "<group>"; };
+		18D1859B16C050E00082E573 /* SCReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCReader.m; sourceTree = "<group>"; };
+		18D1859C16C050E00082E573 /* SCStringsWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCStringsWriter.h; sourceTree = "<group>"; };
+		18D1859D16C050E00082E573 /* SCStringsWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCStringsWriter.m; sourceTree = "<group>"; };
+		18D1859F16C050E00082E573 /* SCExportAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCExportAccessoryView.h; sourceTree = "<group>"; };
+		18D185A016C050E00082E573 /* SCExportAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCExportAccessoryView.m; sourceTree = "<group>"; };
+		18D185A116C050E00082E573 /* SCExportAccessoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCExportAccessoryView.xib; sourceTree = "<group>"; };
+		18D185A216C050E00082E573 /* SCOpenAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCOpenAccessoryView.h; sourceTree = "<group>"; };
+		18D185A316C050E00082E573 /* SCOpenAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCOpenAccessoryView.m; sourceTree = "<group>"; };
+		18D185A416C050E00082E573 /* SCOpenAccessoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCOpenAccessoryView.xib; sourceTree = "<group>"; };
 		18D3674B162772B500B6BACE /* SCStringsUtility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SCStringsUtility.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D3674F162772B500B6BACE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		18D36752162772B500B6BACE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -72,10 +86,6 @@
 		18D3675F162772B600B6BACE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		18D36761162772B600B6BACE /* SCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCAppDelegate.h; sourceTree = "<group>"; };
 		18D36762162772B600B6BACE /* SCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCAppDelegate.m; sourceTree = "<group>"; };
-		18D3676E162772E600B6BACE /* SCReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCReader.h; sourceTree = "<group>"; };
-		18D3676F162772E600B6BACE /* SCReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCReader.m; sourceTree = "<group>"; };
-		18D36770162772E600B6BACE /* SCStringsWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCStringsWriter.h; sourceTree = "<group>"; };
-		18D36771162772E600B6BACE /* SCStringsWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCStringsWriter.m; sourceTree = "<group>"; };
 		18D9AFA916BD4E98008601C0 /* SCStringsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCStringsController.h; sourceTree = "<group>"; };
 		18D9AFAA16BD4E98008601C0 /* SCStringsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCStringsController.m; sourceTree = "<group>"; };
 		18F0D44F16BECE6800CC0264 /* XcodeEditor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XcodeEditor.framework; sourceTree = "<group>"; };
@@ -95,32 +105,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1831CBDA1628082E004B6DD4 /* Readers&Writers */ = {
-			isa = PBXGroup;
-			children = (
-				18D3676E162772E600B6BACE /* SCReader.h */,
-				18D3676F162772E600B6BACE /* SCReader.m */,
-				18B65780162B4850009282AD /* SCCSVWriter.h */,
-				18B65781162B4850009282AD /* SCCSVWriter.m */,
-				18D36770162772E600B6BACE /* SCStringsWriter.h */,
-				18D36771162772E600B6BACE /* SCStringsWriter.m */,
-			);
-			name = "Readers&Writers";
-			sourceTree = "<group>";
-		};
-		1831CBE516280F6B004B6DD4 /* Others */ = {
-			isa = PBXGroup;
-			children = (
-				18A78946163ABBDC00E305D0 /* NSData+SCAdditions.h */,
-				18A78947163ABBDC00E305D0 /* NSData+SCAdditions.m */,
-				18B65772162AEB51009282AD /* NSString+SCAdditions.h */,
-				18B65773162AEB51009282AD /* NSString+SCAdditions.m */,
-				1866F721163B1913003CF110 /* OrderedDictionary.h */,
-				1866F722163B1913003CF110 /* OrderedDictionary.m */,
-			);
-			name = Others;
-			sourceTree = "<group>";
-		};
 		1843F44B1650EB9900CEDBEF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +114,45 @@
 				1843F44F1650EB9900CEDBEF /* icon-save.png */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		18D1859016C050E00082E573 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				18D1859116C050E00082E573 /* NSData+SCAdditions.h */,
+				18D1859216C050E00082E573 /* NSData+SCAdditions.m */,
+				18D1859316C050E00082E573 /* NSString+SCAdditions.h */,
+				18D1859416C050E00082E573 /* NSString+SCAdditions.m */,
+				18D1859516C050E00082E573 /* OrderedDictionary.h */,
+				18D1859616C050E00082E573 /* OrderedDictionary.m */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
+		18D1859716C050E00082E573 /* Readers&Writers */ = {
+			isa = PBXGroup;
+			children = (
+				18D1859816C050E00082E573 /* SCCSVWriter.h */,
+				18D1859916C050E00082E573 /* SCCSVWriter.m */,
+				18D1859A16C050E00082E573 /* SCReader.h */,
+				18D1859B16C050E00082E573 /* SCReader.m */,
+				18D1859C16C050E00082E573 /* SCStringsWriter.h */,
+				18D1859D16C050E00082E573 /* SCStringsWriter.m */,
+			);
+			path = "Readers&Writers";
+			sourceTree = "<group>";
+		};
+		18D1859E16C050E00082E573 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				18D1859F16C050E00082E573 /* SCExportAccessoryView.h */,
+				18D185A016C050E00082E573 /* SCExportAccessoryView.m */,
+				18D185A116C050E00082E573 /* SCExportAccessoryView.xib */,
+				18D185A216C050E00082E573 /* SCOpenAccessoryView.h */,
+				18D185A316C050E00082E573 /* SCOpenAccessoryView.m */,
+				18D185A416C050E00082E573 /* SCOpenAccessoryView.xib */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		18D36740162772B500B6BACE = {
@@ -165,16 +188,17 @@
 		18D36755162772B500B6BACE /* SCStringsUtility */ = {
 			isa = PBXGroup;
 			children = (
+				186758CC1654C83F00BEE1E1 /* MainMenu.xib */,
 				18D36761162772B600B6BACE /* SCAppDelegate.h */,
 				18D36762162772B600B6BACE /* SCAppDelegate.m */,
-				186758CC1654C83F00BEE1E1 /* MainMenu.xib */,
 				1831CBDE1628086A004B6DD4 /* SCRootViewController.h */,
 				1831CBDF1628086A004B6DD4 /* SCRootViewController.m */,
 				1831CBE01628086A004B6DD4 /* SCRootViewController.xib */,
 				18D9AFA916BD4E98008601C0 /* SCStringsController.h */,
 				18D9AFAA16BD4E98008601C0 /* SCStringsController.m */,
-				1831CBDA1628082E004B6DD4 /* Readers&Writers */,
-				1831CBE516280F6B004B6DD4 /* Others */,
+				18D1859E16C050E00082E573 /* Views */,
+				18D1859716C050E00082E573 /* Readers&Writers */,
+				18D1859016C050E00082E573 /* Others */,
 				18D36756162772B500B6BACE /* Supporting Files */,
 			);
 			path = SCStringsUtility;
@@ -252,6 +276,8 @@
 				1843F4521650EB9900CEDBEF /* icon-open.png in Resources */,
 				1843F4531650EB9900CEDBEF /* icon-save.png in Resources */,
 				186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */,
+				18D185AC16C050E00082E573 /* SCExportAccessoryView.xib in Resources */,
+				18D185AE16C050E00082E573 /* SCOpenAccessoryView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,14 +290,16 @@
 			files = (
 				18D3675C162772B500B6BACE /* main.m in Sources */,
 				18D36763162772B600B6BACE /* SCAppDelegate.m in Sources */,
-				18D36773162772E600B6BACE /* SCReader.m in Sources */,
-				18D36774162772E600B6BACE /* SCStringsWriter.m in Sources */,
 				1831CBE11628086A004B6DD4 /* SCRootViewController.m in Sources */,
-				18B65774162AEB51009282AD /* NSString+SCAdditions.m in Sources */,
-				18B65782162B4850009282AD /* SCCSVWriter.m in Sources */,
-				18A78948163ABBDC00E305D0 /* NSData+SCAdditions.m in Sources */,
-				1866F723163B1913003CF110 /* OrderedDictionary.m in Sources */,
 				18D9AFAB16BD4E98008601C0 /* SCStringsController.m in Sources */,
+				18D185A516C050E00082E573 /* NSData+SCAdditions.m in Sources */,
+				18D185A616C050E00082E573 /* NSString+SCAdditions.m in Sources */,
+				18D185A716C050E00082E573 /* OrderedDictionary.m in Sources */,
+				18D185A816C050E00082E573 /* SCCSVWriter.m in Sources */,
+				18D185A916C050E00082E573 /* SCReader.m in Sources */,
+				18D185AA16C050E00082E573 /* SCStringsWriter.m in Sources */,
+				18D185AB16C050E00082E573 /* SCExportAccessoryView.m in Sources */,
+				18D185AD16C050E00082E573 /* SCOpenAccessoryView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

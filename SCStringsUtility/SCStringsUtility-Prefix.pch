@@ -3,7 +3,16 @@
 //
 
 #ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
 
-    #define SCLog(id, ...) NSLog((@"%s [Line %d] " id), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#import <Cocoa/Cocoa.h>
+
+#define SCLog(id, ...) NSLog((@"%s [Line %d] " id), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+typedef enum {
+    SCFileTypeInvalid,
+    SCFileTypeXcodeProject,
+    SCFileTypeCSV,
+    SCFileTypeXML
+}SCFileType;
+
 #endif
