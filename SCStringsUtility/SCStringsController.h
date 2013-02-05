@@ -21,6 +21,8 @@
 
 - (void)reset;
 
+- (void)save:(void (^)(void))success failure:(void (^)(NSError *error))failure;
+
 - (void)importProjectAtPath:(NSString*)path
        positionalParameters:(BOOL)includePositionalParameters
           genstringsRoutine:(NSString*)genstringsRoutine
@@ -28,6 +30,10 @@
                     failure:(void(^)(NSError *error))failure;
 
 - (void)importCSVFileAtPath:(NSString*)path
+                    success:(void (^)(void))success
+                    failure:(void(^)(NSError *error))failure;
+
+- (void)importXMLFileAtPath:(NSString*)path
                     success:(void (^)(void))success
                     failure:(void(^)(NSError *error))failure;
 
@@ -40,6 +46,12 @@ useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
 - (void)generateStringFilesAtPath:(NSString *)path
                           success:(void (^)(void))success
                           failure:(void (^)(NSError *error))failure;
+
+- (void)generateXMLFileAtPath:(NSString*)path
+              includeComments:(BOOL)includeComments
+   useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
+                      success:(void (^)(void))success
+                      failure:(void (^)(NSError *error))failure;
 
 - (void)filterEntriesWithSearchString:(NSString*)searchString onlyKeys:(BOOL)searchOnlyKeys;
 

@@ -96,6 +96,7 @@ NSString *DescriptionForObject(NSObject *object, id locale, NSUInteger indent)
 	if (![dictionary objectForKey:aKey])
 	{
 		[array addObject:aKey];
+        array = [[array sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] mutableCopy];
 	}
 	[dictionary setObject:anObject forKey:aKey];
 }

@@ -29,7 +29,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
 @interface SCStringsController ()
 
 @property (nonatomic, strong) XCProject *project;
-@property (nonatomic, strong) NSString *csvFilePath;
+@property (nonatomic, strong) NSString *sourceFilePath;
 
 @property (nonatomic, assign) SCFileType sourceType;
 
@@ -73,17 +73,42 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     }
 }
 
+- (void)save:(void (^)(void))success failure:(void (^)(NSError *error))failure
+{
+    switch (self.sourceType) {
+        case SCFileTypeInvalid:
+        {
+            return;
+        }
+        case SCFileTypeXcodeProject:
+        {
+            [self generateStringFilesAtPath:nil success:success failure:failure];
+            break;
+        }
+        case SCFileTypeCSV:
+        {
+            [self generateCSVAtPath:nil includeComments:YES useKeyForEmptyTranslations:NO success:success failure:failure];
+            break;
+        }
+        case SCFileTypeXML:
+        {
+            [self generateXMLFileAtPath:nil includeComments:YES useKeyForEmptyTranslations:NO success:success failure:failure];
+            break;
+        }
+    }
+}
+
 #pragma mark - Importers
 
 - (void)importCSVFileAtPath:(NSString *)path success:(void (^)(void))success failure:(void (^)(NSError *))failure
 {
-    self.csvFilePath = path;
+    self.sourceFilePath = path;
     self.project = nil;
     self.sourceType = SCFileTypeCSV;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         
-        SCReader * reader = [[SCReader alloc] initWithPath:self.csvFilePath];
+        SCReader * reader = [[SCReader alloc] initWithPath:self.sourceFilePath];
         
         NSArray *headers = [[reader readTrimmedLine] componentsSeparatedByString:@","];
         headers = [headers subarrayWithRange:NSMakeRange(1, headers.count-1)];
@@ -166,7 +191,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
                     failure:(void (^)(NSError *))failure
 {
     self.project = [[XCProject alloc] initWithFilePath:path];
-    self.csvFilePath = nil;
+    self.sourceFilePath = nil;
     self.sourceType = SCFileTypeXcodeProject;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -232,6 +257,57 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     }
 }
 
+- (void)importXMLFileAtPath:(NSString*)path
+                    success:(void (^)(void))success
+                    failure:(void(^)(NSError *error))failure
+{
+    self.project = nil;
+    self.sourceFilePath = path;
+    self.sourceType = SCFileTypeXML;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        NSInputStream *stream = [[NSInputStream alloc] initWithFileAtPath:path];
+        [stream open];
+        
+        NSError *error;
+        NSPropertyListFormat format;
+        NSDictionary *translations = [NSPropertyListSerialization propertyListWithStream:stream options:NSPropertyListMutableContainersAndLeaves format:&format error:&error];
+        
+        [stream close];
+        
+        if(error || format != NSPropertyListXMLFormat_v1_0) {
+            SCLog(@"Unexpected XML format");
+            if(failure) failure(error);
+            
+            [self reset];
+            return;
+        }
+        
+        self.translationFiles = nil;
+        self.translationsDictionary = [OrderedDictionary dictionary];
+        [translations enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *obj, BOOL *stop) {
+            
+            if(!self.translationFiles) {
+                self.translationFiles = [NSMutableDictionary dictionaryWithObject:[NSMutableArray array] forKey:kKeyImported];
+            }
+            
+            for(NSString *language in [obj allKeys]) {
+                if([language isEqualToString:kKeyComment]) continue;
+                if([[self.translationFiles objectForKey:kKeyImported] containsObject:@{kKeyLanguage : language}]) continue;
+                
+                [[self.translationFiles objectForKey:kKeyImported] addObject:@{kKeyLanguage : language}];
+            }
+            
+            [self.translationsDictionary setObject:obj forKey:key];
+        }];
+        
+        [self setFilteredTranslationsDictionary:[self.translationsDictionary mutableCopy]];
+        
+        if(success) dispatch_async(dispatch_get_main_queue(), success);
+    });
+}
+
 #pragma mark - Exporters
 
 - (void)generateStringFilesAtPath:(NSString *)path success:(void (^)(void))success failure:(void (^)(NSError *))failure
@@ -249,13 +325,17 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
         
         SCStringsWriter *stringsWriter = [[SCStringsWriter alloc] initWithHeaders:headers];
         [stringsWriter writeTranslations:self.translationsDictionary toPath:path failure:^(NSError *error) {
-            NSLog(@"Could not write string files %@", error);
+            SCLog(@"Could not write string files %@", error);
+            if(failure) failure(error);
+            return;
         }];
     }
     else {
         SCStringsWriter *stringsWriter = [[SCStringsWriter alloc] initWithTranslationFiles:self.translationFiles];
         [stringsWriter writeTranslations:self.translationsDictionary failure:^(NSError *error) {
-            NSLog(@"Could not write string files %@", error);
+            SCLog(@"Could not write string files %@", error);
+            if(failure) failure(error);
+            return;
         }];
     }
 }
@@ -273,7 +353,7 @@ useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
         [headers addObject:column.identifier];
     }
     
-    SCCSVWriter *writer = [[SCCSVWriter alloc] initWithHeaders:headers filePath:path ? path : self.csvFilePath separator:@","];
+    SCCSVWriter *writer = [[SCCSVWriter alloc] initWithHeaders:headers filePath:path ? path : self.sourceFilePath separator:@","];
     
     for(NSString *key in self.translationsDictionary)
     {
@@ -289,6 +369,46 @@ useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
     
     if(success) dispatch_async(dispatch_get_main_queue(), success);
 }
+
+- (void)generateXMLFileAtPath:(NSString*)path
+              includeComments:(BOOL)includeComments
+   useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
+                      success:(void (^)(void))success
+                      failure:(void (^)(NSError *error))failure
+{
+    NSMutableArray *headers = [NSMutableArray array];
+    for(NSTableColumn *column in self.tableView.tableColumns)
+    {
+        if(!includeComments && [column.identifier isEqualToString:kKeyComment]) continue;
+        [headers addObject:column.identifier];
+    }
+    
+    self.filteredTranslationsDictionary = [self.translationsDictionary mutableCopy];
+    
+    [self.filteredTranslationsDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSMutableDictionary* obj, BOOL *stop) {
+        
+        if(!includeComments)
+            [obj removeObjectForKey:kKeyComment];
+        
+        [headers enumerateObjectsUsingBlock:^(id header, NSUInteger idx, BOOL *stop) {
+            if(useKeyForEmptyTranslations && ((NSString*)[obj objectForKey:header]).length == 0)
+                [obj setObject:key forKey:header];
+        }];
+    }];
+    
+    
+    NSError *error;
+    [[NSPropertyListSerialization dataWithPropertyList:self.filteredTranslationsDictionary format:NSPropertyListXMLFormat_v1_0 options:0 error:&error] writeToFile:path ? path : self.sourceFilePath atomically:YES];
+    
+    if(error) {
+        SCLog(@"%@", error);
+        if(failure) failure(error);
+    }
+    else {
+        if(success) success();
+    }
+}
+
 
 #pragma mark - Filtering
 

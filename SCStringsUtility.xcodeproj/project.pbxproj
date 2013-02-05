@@ -11,7 +11,6 @@
 		1831CBE21628086A004B6DD4 /* SCRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1831CBE01628086A004B6DD4 /* SCRootViewController.xib */; };
 		1831CBE4162809E0004B6DD4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1831CBE3162809E0004B6DD4 /* QuartzCore.framework */; };
 		1843F4501650EB9900CEDBEF /* icon-export.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44C1650EB9900CEDBEF /* icon-export.png */; };
-		1843F4511650EB9900CEDBEF /* icon-import.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44D1650EB9900CEDBEF /* icon-import.png */; };
 		1843F4521650EB9900CEDBEF /* icon-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44E1650EB9900CEDBEF /* icon-open.png */; };
 		1843F4531650EB9900CEDBEF /* icon-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44F1650EB9900CEDBEF /* icon-save.png */; };
 		186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186758CC1654C83F00BEE1E1 /* MainMenu.xib */; };
@@ -53,7 +52,6 @@
 		1831CBE01628086A004B6DD4 /* SCRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCRootViewController.xib; sourceTree = "<group>"; };
 		1831CBE3162809E0004B6DD4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1843F44C1650EB9900CEDBEF /* icon-export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-export.png"; sourceTree = "<group>"; };
-		1843F44D1650EB9900CEDBEF /* icon-import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-import.png"; sourceTree = "<group>"; };
 		1843F44E1650EB9900CEDBEF /* icon-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-open.png"; sourceTree = "<group>"; };
 		1843F44F1650EB9900CEDBEF /* icon-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-save.png"; sourceTree = "<group>"; };
 		186758CC1654C83F00BEE1E1 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 			isa = PBXGroup;
 			children = (
 				1843F44C1650EB9900CEDBEF /* icon-export.png */,
-				1843F44D1650EB9900CEDBEF /* icon-import.png */,
 				1843F44E1650EB9900CEDBEF /* icon-open.png */,
 				1843F44F1650EB9900CEDBEF /* icon-save.png */,
 			);
@@ -272,7 +269,6 @@
 				18D36760162772B600B6BACE /* Credits.rtf in Resources */,
 				1831CBE21628086A004B6DD4 /* SCRootViewController.xib in Resources */,
 				1843F4501650EB9900CEDBEF /* icon-export.png in Resources */,
-				1843F4511650EB9900CEDBEF /* icon-import.png in Resources */,
 				1843F4521650EB9900CEDBEF /* icon-open.png in Resources */,
 				1843F4531650EB9900CEDBEF /* icon-save.png in Resources */,
 				186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */,

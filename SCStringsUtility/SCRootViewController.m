@@ -132,11 +132,9 @@ static NSString *kFileTypeXML = @"xml";
             {
                 case SCFileTypeXcodeProject:
                 {
-                    [self.stringsController generateStringFilesAtPath:[[self.exportPanel URL] path] success:^{
-                        
-                    } failure:^(NSError *error) {
-                        NSLog(@"Could not generate string files %@", error);
-                    }];
+                    [self.stringsController generateStringFilesAtPath:[[self.exportPanel URL] path]
+                                                              success:nil
+                                                              failure:nil];
                     
                     break;
                 }
@@ -145,16 +143,24 @@ static NSString *kFileTypeXML = @"xml";
                     BOOL includeComments = [self.exportPanelAccessoryView shouldIncludeComments];
                     BOOL useKeyForMissingTranslations = [self.exportPanelAccessoryView shouldUseKeyForMissingTranslations];
                     
-                    [self.stringsController generateCSVAtPath:[[self.exportPanel URL] path] includeComments:includeComments useKeyForEmptyTranslations:useKeyForMissingTranslations success:^{
-                        
-                    } failure:^(NSError *error) {
-                        NSLog(@"Could not generate CSV file %@", error);
-                    }];
+                    [self.stringsController generateCSVAtPath:[[self.exportPanel URL] path]
+                                              includeComments:includeComments
+                                   useKeyForEmptyTranslations:useKeyForMissingTranslations
+                                                      success:nil
+                                                      failure:nil];
                     
                     break;
                 }
                 case SCFileTypeXML:
                 {
+                    BOOL includeComments = [self.exportPanelAccessoryView shouldIncludeComments];
+                    BOOL useKeyForMissingTranslations = [self.exportPanelAccessoryView shouldUseKeyForMissingTranslations];
+                    
+                    [self.stringsController generateXMLFileAtPath:[[self.exportPanel URL] path]
+                                                  includeComments:includeComments
+                                       useKeyForEmptyTranslations:useKeyForMissingTranslations
+                                                          success:nil
+                                                          failure:nil];
                     break;
                 }
                 default:
@@ -203,22 +209,9 @@ static NSString *kFileTypeXML = @"xml";
 
 - (IBAction)onSaveClick:(id)sender
 {
-    if(self.stringsController.sourceType == SCFileTypeInvalid) return;
-    
-    if(self.stringsController.sourceType == SCFileTypeXcodeProject) {
-        [self.stringsController generateStringFilesAtPath:nil success:^{
-            
-        } failure:^(NSError *error) {
-            NSLog(@"Could not generate string files %@", error);
-        }];
-    }
-    else {
-        [self.stringsController generateCSVAtPath:nil includeComments:YES useKeyForEmptyTranslations:NO success:^{
-            
-        } failure:^(NSError *error) {
-            NSLog(@"Could not generate CSV file %@", error);
-        }];
-    }
+    [self.stringsController save:nil failure:^(NSError *error) {
+        SCLog(@"Could not save data %@", error);
+    }];
 }
 
 - (IBAction)onOpenClick:(id)sender
@@ -230,7 +223,7 @@ static NSString *kFileTypeXML = @"xml";
     [openPanel setCanCreateDirectories:NO];
     [openPanel setAllowsMultipleSelection:NO];
     
-    [openPanel setAllowedFileTypes:@[@"xcodeproj", @"csv"]];
+    [openPanel setAllowedFileTypes:@[@"xcodeproj", @"csv", @"xml"]];
     
     NSInteger result = [openPanel runModal];
     if(result != NSOKButton) return;
@@ -254,19 +247,21 @@ static NSString *kFileTypeXML = @"xml";
             [self.stringsController importProjectAtPath:[[openPanel URL] path]
                                    positionalParameters:includePositionalParameters
                                       genstringsRoutine:routine success:^{ [self reloadData];}
-                                                failure:^(NSError *error) { NSLog(@"Could not import Xcode project %@", error);}];
+                                                failure:^(NSError *error) { SCLog(@"Could not import Xcode project %@", error);}];
             break;
         }
         case SCFileTypeCSV:
         {
             [self.stringsController importCSVFileAtPath:[[openPanel URL] path]
                                                 success:^{ [self reloadData];}
-                                                failure:^(NSError *error) { NSLog(@"Could not import CSV file %@",error);}];
+                                                failure:^(NSError *error) { SCLog(@"Could not import CSV file %@",error);}];
             break;
         }
         case SCFileTypeXML:
         {
-            
+            [self.stringsController importXMLFileAtPath:[[openPanel URL] path]
+                                                success:^{ [self reloadData]; }
+                                                failure:^(NSError *error) { SCLog(@"Could not import XML file %@",error);}];
         }
         default:
         {
