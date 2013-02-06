@@ -383,9 +383,9 @@ useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
         [headers addObject:column.identifier];
     }
     
-    self.filteredTranslationsDictionary = [self.translationsDictionary mutableCopy];
+    OrderedDictionary *results = [self.translationsDictionary mutableCopy];
     
-    [self.filteredTranslationsDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSMutableDictionary* obj, BOOL *stop) {
+    [results enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSMutableDictionary* obj, BOOL *stop) {
         
         if(!includeComments)
             [obj removeObjectForKey:kKeyComment];
@@ -398,7 +398,7 @@ useKeyForEmptyTranslations:(BOOL)useKeyForEmptyTranslations
     
     
     NSError *error;
-    [[NSPropertyListSerialization dataWithPropertyList:self.filteredTranslationsDictionary format:NSPropertyListXMLFormat_v1_0 options:0 error:&error] writeToFile:path ? path : self.sourceFilePath atomically:YES];
+    [[NSPropertyListSerialization dataWithPropertyList:results format:NSPropertyListXMLFormat_v1_0 options:0 error:&error] writeToFile:path ? path : self.sourceFilePath atomically:YES];
     
     if(error) {
         SCLog(@"%@", error);
