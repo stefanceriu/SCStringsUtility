@@ -20,10 +20,16 @@ SCStringsUtility is an OS X Application built for easing the way we deal with lo
 * Console for displaying genstrings warnings
 
 ## How to use it
-Fire up the application and point it to an .xcodeproj
+- download the .dmg from http://sourceforge.net/projects/stringsutility/files/SCStringsUtility.dmg/download
 
-## ToDo
+- fire up the application and point it to an .xcodeproj
+
+##Known issues
+- The application doesn't work when opening Xcode projects that have the .strings files inside virual groups. XcodeEditor doesn't provide correct paths for that case
+
+##ToDo
 - Individual cell selection
+
 - Better error handling
  
 ## License

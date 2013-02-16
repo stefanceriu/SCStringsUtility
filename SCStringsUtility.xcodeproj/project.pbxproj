@@ -13,6 +13,7 @@
 		1843F4501650EB9900CEDBEF /* icon-export.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44C1650EB9900CEDBEF /* icon-export.png */; };
 		1843F4521650EB9900CEDBEF /* icon-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44E1650EB9900CEDBEF /* icon-open.png */; };
 		1843F4531650EB9900CEDBEF /* icon-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44F1650EB9900CEDBEF /* icon-save.png */; };
+		1852D07816D01F8D00574822 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1852D07716D01F8D00574822 /* icon.icns */; };
 		186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186758CC1654C83F00BEE1E1 /* MainMenu.xib */; };
 		1878321816BECEC800A8C760 /* XcodeEditor.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18F0D44F16BECE6800CC0264 /* XcodeEditor.framework */; };
 		18D185A516C050E00082E573 /* NSData+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859216C050E00082E573 /* NSData+SCAdditions.m */; };
@@ -54,6 +55,7 @@
 		1843F44C1650EB9900CEDBEF /* icon-export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-export.png"; sourceTree = "<group>"; };
 		1843F44E1650EB9900CEDBEF /* icon-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-open.png"; sourceTree = "<group>"; };
 		1843F44F1650EB9900CEDBEF /* icon-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-save.png"; sourceTree = "<group>"; };
+		1852D07716D01F8D00574822 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		186758CC1654C83F00BEE1E1 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		18D1859116C050E00082E573 /* NSData+SCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SCAdditions.h"; sourceTree = "<group>"; };
 		18D1859216C050E00082E573 /* NSData+SCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SCAdditions.m"; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 		1843F44B1650EB9900CEDBEF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1852D07716D01F8D00574822 /* icon.icns */,
 				1843F44C1650EB9900CEDBEF /* icon-export.png */,
 				1843F44E1650EB9900CEDBEF /* icon-open.png */,
 				1843F44F1650EB9900CEDBEF /* icon-save.png */,
@@ -274,6 +277,7 @@
 				186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */,
 				18D185AC16C050E00082E573 /* SCExportAccessoryView.xib in Resources */,
 				18D185AE16C050E00082E573 /* SCOpenAccessoryView.xib in Resources */,
+				1852D07816D01F8D00574822 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
