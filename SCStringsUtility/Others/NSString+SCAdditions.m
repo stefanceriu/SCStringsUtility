@@ -51,4 +51,28 @@
     return [self stringByReplacingCharactersInRange:range withString:@""];
 }
 
++ (BOOL)detectFileEncoding:(NSStringEncoding *)encoding path:(NSString *)path error:(NSError **)error
+{
+    NSString *string = [NSString stringWithContentsOfFile:path usedEncoding:encoding error:error];
+    if (string != nil) {
+        if (*encoding == NSUTF16StringEncoding) {
+            // fix for little endian
+            NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+            [fileHandle seekToFileOffset:0];
+            NSData *data = [fileHandle readDataOfLength:2];
+            const char *head = [data bytes];
+            if (*head == '\xFF' && *(head + 1) == '\xFE') {
+                *encoding = NSUTF16LittleEndianStringEncoding;
+            }
+            [fileHandle closeFile];
+        }
+
+        return YES;
+    } else {
+        SCLog(@"Possible problem in detecting encoding %@", *error);
+
+        return NO;
+    }
+}
+
 @end

@@ -14,4 +14,7 @@
 
 - (NSString*)stringByTrimmingLeadingWhiteSpaces;
 - (NSString*)stringByTrimmingTralingWhiteSpaces;
+
++ (BOOL)detectFileEncoding:(NSStringEncoding *)encoding path:(NSString *)path error:(NSError **)error;
+
 @end
