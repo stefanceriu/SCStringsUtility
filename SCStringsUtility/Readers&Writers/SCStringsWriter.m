@@ -13,11 +13,13 @@
 @interface SCStringsWriter ()
 @property (nonatomic, strong) NSMutableDictionary *fileHandlers;
 @property (nonatomic, strong) NSArray *headers;
+@property(nonatomic, assign) NSStringEncoding fileEncoding;
 @end
 
 @implementation SCStringsWriter
 @synthesize fileHandlers;
 @synthesize headers;
+@synthesize fileEncoding;
 
 - (id)initWithHeaders:(NSArray *)heads
 {
@@ -42,6 +44,11 @@
             {
                 NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:[x objectForKey:@"Path"]];
                 if(fileHandle == nil) {SCLog(@"Unable to open file for writing at path %@", [x objectForKey:@"Path"]); return nil;}
+
+                if (![NSString detectFileEncoding:&fileEncoding path:[x objectForKey:@"Path"] error:nil]) {
+                    // fallback
+                    fileEncoding = NSUTF8StringEncoding;
+                }
                 
                 [self.fileHandlers setObject:fileHandle forKey:[x objectForKey:@"Language"]];
                 [heads addObject:[x objectForKey:@"Language"]];
@@ -63,7 +70,7 @@
         {
             NSString *comment = [NSString stringWithFormat:@"%@\n", [[translationDict objectForKey:@"Comment"] stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]];
             for(NSString *fileHandleKey in self.fileHandlers)
-                [(NSFileHandle*)[self.fileHandlers objectForKey:fileHandleKey] writeData:[comment dataUsingEncoding:NSUTF8StringEncoding]];
+                [(NSFileHandle*)[self.fileHandlers objectForKey:fileHandleKey] writeData:[comment dataUsingEncoding:self.fileEncoding]];
         }
         
         for(NSString *header in self.headers)
@@ -72,7 +79,7 @@
             if(!translation.length) translation = key;
             
             NSString *line = [NSString stringWithFormat:@"\"%@\" = \"%@\";\n\n", key, translation];
-            [(NSFileHandle*)[self.fileHandlers objectForKey:header] writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+            [(NSFileHandle*)[self.fileHandlers objectForKey:header] writeData:[line dataUsingEncoding:self.fileEncoding]];
         }
     }
     

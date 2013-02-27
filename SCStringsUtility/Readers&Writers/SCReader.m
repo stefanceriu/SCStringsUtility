@@ -40,9 +40,10 @@
         fileHandle = [NSFileHandle fileHandleForReadingAtPath:self.filePath];
         if (fileHandle == nil) return nil;
         
-        NSError *error;
-        [NSString stringWithContentsOfFile:self.filePath usedEncoding:&encoding error:&error];
-        if(error) SCLog(@"Possible problem in detecting encoding %@",error);
+        if (![NSString detectFileEncoding:&encoding path:filePath error:nil]) {
+            // fallback
+            encoding = NSUTF8StringEncoding;
+        }
                 
         lineDelimiter = @"\n";
         filePath = path;
@@ -58,8 +59,8 @@
 - (NSString *)readLine
 {
     if (currentOffset >= totalFileLength) { currentOffset = 0ULL; currentLine = 0; return nil; }
-    
-    NSData * newLineData = [lineDelimiter dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSData * newLineData = [lineDelimiter dataUsingEncoding:self.encoding];
     [fileHandle seekToFileOffset:currentOffset];
     NSMutableData * currentData = [[NSMutableData alloc] init];
     BOOL shouldReadMore = YES;
