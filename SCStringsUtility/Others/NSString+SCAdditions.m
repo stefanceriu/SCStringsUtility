@@ -63,7 +63,10 @@
             const char *head = [data bytes];
             if (*head == '\xFF' && *(head + 1) == '\xFE') {
                 *encoding = NSUTF16LittleEndianStringEncoding;
+            } else if (*head == '\xFE' && *(head + 1) == '\xFF') {
+                *encoding = NSUTF16BigEndianStringEncoding;
             }
+            
             [fileHandle closeFile];
         }
 

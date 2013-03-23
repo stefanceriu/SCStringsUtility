@@ -40,7 +40,8 @@
         fileHandle = [NSFileHandle fileHandleForReadingAtPath:self.filePath];
         if (fileHandle == nil) return nil;
         
-        if (![NSString detectFileEncoding:&encoding path:filePath error:nil]) {
+        NSError *error;
+        if (![NSString detectFileEncoding:&encoding path:filePath error:&error]) {
             // fallback
             encoding = NSUTF8StringEncoding;
         }

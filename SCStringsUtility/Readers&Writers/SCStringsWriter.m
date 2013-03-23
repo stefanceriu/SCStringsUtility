@@ -10,16 +10,15 @@
 #import "SCReader.h"
 #import "NSString+SCAdditions.h"
 
+static NSString *kKeyFileHandle = @"kKeyFileHandle";
+static NSString *kKeyEncoding = @"kKeyEncoding";
+
 @interface SCStringsWriter ()
 @property (nonatomic, strong) NSMutableDictionary *fileHandlers;
 @property (nonatomic, strong) NSArray *headers;
-@property(nonatomic, assign) NSStringEncoding fileEncoding;
 @end
 
 @implementation SCStringsWriter
-@synthesize fileHandlers;
-@synthesize headers;
-@synthesize fileEncoding;
 
 - (id)initWithHeaders:(NSArray *)heads
 {
@@ -45,12 +44,13 @@
                 NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:[x objectForKey:@"Path"]];
                 if(fileHandle == nil) {SCLog(@"Unable to open file for writing at path %@", [x objectForKey:@"Path"]); return nil;}
 
-                if (![NSString detectFileEncoding:&fileEncoding path:[x objectForKey:@"Path"] error:nil]) {
+                NSStringEncoding encoding;
+                if (![NSString detectFileEncoding:&encoding path:[x objectForKey:@"Path"] error:nil]) {
                     // fallback
-                    fileEncoding = NSUTF8StringEncoding;
+                    encoding = NSUTF8StringEncoding;
                 }
-                
-                [self.fileHandlers setObject:fileHandle forKey:[x objectForKey:@"Language"]];
+
+                [self.fileHandlers setObject:@{kKeyFileHandle : fileHandle, kKeyEncoding : @(encoding)} forKey:[x objectForKey:@"Language"]];
                 [heads addObject:[x objectForKey:@"Language"]];
             }
         }
@@ -70,7 +70,12 @@
         {
             NSString *comment = [NSString stringWithFormat:@"%@\n", [[translationDict objectForKey:@"Comment"] stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]];
             for(NSString *fileHandleKey in self.fileHandlers)
-                [(NSFileHandle*)[self.fileHandlers objectForKey:fileHandleKey] writeData:[comment dataUsingEncoding:self.fileEncoding]];
+            {
+                NSFileHandle *fileHandle = [[self.fileHandlers objectForKey:fileHandleKey] objectForKey:kKeyFileHandle];
+                NSStringEncoding encoding = [[[self.fileHandlers objectForKey:fileHandleKey] objectForKey:kKeyEncoding] unsignedIntValue];
+                
+                [fileHandle writeData:[comment dataUsingEncoding:encoding]];
+            }
         }
         
         for(NSString *header in self.headers)
@@ -78,13 +83,19 @@
             NSString *translation = [translationDict objectForKey:header];
             if(!translation.length) translation = key;
             
+            NSFileHandle *fileHandle = [[self.fileHandlers objectForKey:header] objectForKey:kKeyFileHandle];
+            NSStringEncoding encoding = [[[self.fileHandlers objectForKey:header] objectForKey:kKeyEncoding] unsignedIntValue];
+            
             NSString *line = [NSString stringWithFormat:@"\"%@\" = \"%@\";\n\n", key, translation];
-            [(NSFileHandle*)[self.fileHandlers objectForKey:header] writeData:[line dataUsingEncoding:self.fileEncoding]];
+            [fileHandle writeData:[line dataUsingEncoding:encoding]];
         }
     }
     
     for(NSString *fileHandleKey in self.fileHandlers)
-        [(NSFileHandle*)[self.fileHandlers objectForKey:fileHandleKey] closeFile];
+    {
+        NSFileHandle *fileHandle = [[self.fileHandlers objectForKey:fileHandleKey] objectForKey:kKeyFileHandle];
+        [fileHandle closeFile];
+    }
 }
 
 - (void)writeTranslations:(NSDictionary*)translations toPath:(NSString*)path failure:(void(^)(NSError *error))failure
@@ -92,7 +103,7 @@
     self.fileHandlers = [NSMutableDictionary dictionary];
     
     NSError *error;
-    for(NSString *x in headers)
+    for(NSString *x in self.headers)
     {
         NSString *languageIdentifier = [NSLocale canonicalLanguageIdentifierFromString:x];
         
@@ -109,7 +120,7 @@
         NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:stringsPath];
         if(fileHandle == nil) SCLog(@"Unable to open file for writing at path %@", stringsPath);
         
-        [self.fileHandlers setObject:fileHandle forKey:x];
+        [self.fileHandlers setObject:@{kKeyFileHandle : fileHandle, kKeyEncoding : @(NSUTF8StringEncoding)} forKey:x];
     }
     
     [self writeTranslations:translations failure:failure];
