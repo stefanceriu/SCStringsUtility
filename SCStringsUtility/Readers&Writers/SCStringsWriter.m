@@ -103,10 +103,8 @@ static NSString *kKeyEncoding = @"kKeyEncoding";
     self.fileHandlers = [NSMutableDictionary dictionary];
     
     NSError *error;
-    for(NSString *x in self.headers)
-    {
-        NSString *languageIdentifier = [NSLocale canonicalLanguageIdentifierFromString:x];
-        
+    for(NSString *languageIdentifier in self.headers)
+    {   
         NSString *lprojPath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.lproj", languageIdentifier]];
         [[NSFileManager defaultManager] createDirectoryAtPath:lprojPath withIntermediateDirectories:YES attributes:nil error:&error];
         if(error) {
@@ -120,7 +118,7 @@ static NSString *kKeyEncoding = @"kKeyEncoding";
         NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:stringsPath];
         if(fileHandle == nil) SCLog(@"Unable to open file for writing at path %@", stringsPath);
         
-        [self.fileHandlers setObject:@{kKeyFileHandle : fileHandle, kKeyEncoding : @(NSUTF8StringEncoding)} forKey:x];
+        [self.fileHandlers setObject:@{kKeyFileHandle : fileHandle, kKeyEncoding : @(NSUTF8StringEncoding)} forKey:languageIdentifier];
     }
     
     [self writeTranslations:translations failure:failure];

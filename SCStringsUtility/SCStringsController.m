@@ -201,7 +201,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
         
         for(XCSourceFile *file in files)
         {
-            NSString *language = [[NSLocale currentLocale] displayNameForKey:NSLocaleLanguageCode value:[[[file.name stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension]];
+            NSString *language = [[[file.name stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];
             if(!language) continue;
             
             XCGroup *parentGroup = [[self.project groupForGroupMemberWithKey:file.key] parentGroup];
