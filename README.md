@@ -20,7 +20,7 @@ SCStringsUtility is an OS X Application built for easing the way we deal with lo
 * Console for displaying genstrings warnings
 
 ## How to use it
-- download the .dmg from http://sourceforge.net/projects/stringsutility/files/SCStringsUtility.dmg/download
+- download the zipped app from the "releases" tab
 
 - fire up the application and point it to an .xcodeproj
 
