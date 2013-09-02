@@ -220,8 +220,9 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
         [self executeGenStringsAtPath:[self.project.filePath stringByDeletingLastPathComponent] withRoutine:genstringsRoutine positionalParameters:includePositionalParameters];
         SCReader *genstringsOutputReader = [[SCReader alloc] initWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:kKeyStringsFile]];
         NSString *comment, *key, *translation;
-        while([genstringsOutputReader getNextComment:&comment key:&key translation:&translation])
+        while([genstringsOutputReader getNextComment:&comment key:&key translation:&translation]) {
             [self.translationsDictionary setObject:[NSMutableDictionary dictionaryWithObject:comment forKey:kKeyComment] forKey:key];
+        }
         
         [self setFilteredTranslationsDictionary:[self.translationsDictionary mutableCopy]];
         
@@ -238,7 +239,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     
     NSString *tempFilePath = NSTemporaryDirectory();
     
-    NSString *argument = [NSString stringWithFormat:@"find . -name '*.m' | xargs genstrings -o %@", tempFilePath];
+    NSString *argument = [NSString stringWithFormat:@"find ./ -name *.m -print0| xargs -0 genstrings -o %@", tempFilePath];
     if([routine length]) argument = [argument stringByAppendingString:[NSString stringWithFormat:@" -s %@", routine]];
     if(!positionalParameters) argument = [argument stringByAppendingString:@" -noPositionalParameters"];
     
