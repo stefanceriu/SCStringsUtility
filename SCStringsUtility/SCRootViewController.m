@@ -243,10 +243,13 @@ static NSString *kFileTypeXML = @"xml";
             
             BOOL includePositionalParameters = [self.openPanelAccessoryView shouldAddPositionalParameters];
             NSString *routine = [self.openPanelAccessoryView genstringsRoutine];
+            NSString *stringsFile = [self.openPanelAccessoryView stringsFileName];
             
             [self.stringsController importProjectAtPath:[[openPanel URL] path]
                                    positionalParameters:includePositionalParameters
-                                      genstringsRoutine:routine success:^{ [self reloadData];}
+                                      genstringsRoutine:routine
+                                        stringsFileName:stringsFile
+                                                success:^{ [self reloadData];}
                                                 failure:^(NSError *error) { SCLog(@"Could not import Xcode project %@", error);}];
             break;
         }

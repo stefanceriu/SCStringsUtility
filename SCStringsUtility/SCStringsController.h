@@ -26,6 +26,7 @@
 - (void)importProjectAtPath:(NSString*)path
        positionalParameters:(BOOL)includePositionalParameters
           genstringsRoutine:(NSString*)genstringsRoutine
+            stringsFileName:(NSString*)stringsFileName
                     success:(void (^)(void))success
                     failure:(void(^)(NSError *error))failure;
 

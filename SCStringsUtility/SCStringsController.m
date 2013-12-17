@@ -187,6 +187,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
 - (void)importProjectAtPath:(NSString *)path
        positionalParameters:(BOOL)includePositionalParameters
           genstringsRoutine:(NSString *)genstringsRoutine
+            stringsFileName:(NSString*)stringsFileName
                     success:(void (^)(void))success
                     failure:(void (^)(NSError *))failure
 {
@@ -194,9 +195,18 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     self.sourceFilePath = nil;
     self.sourceType = SCFileTypeXcodeProject;
     
+    NSString *stringsFileNamesWithoutExtension = nil;
+    
+    if (![stringsFileName length]) {
+        stringsFileName = kKeyStringsFile;
+        stringsFileNamesWithoutExtension = kKeyLocalizable;
+    } else {
+        stringsFileNamesWithoutExtension = [stringsFileName stringByDeletingPathExtension];
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSArray *files = [self.project.files filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(XCSourceFile *evaluatedObject, NSDictionary *bindings) {
-            return [[evaluatedObject.name lastPathComponent] isEqualToString:kKeyStringsFile];
+            return [[evaluatedObject.name lastPathComponent] isEqualToString:stringsFileName];
         }]];
         
         for(XCSourceFile *file in files)
@@ -206,7 +216,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
             
             XCGroup *parentGroup = [[self.project groupForGroupMemberWithKey:file.key] parentGroup];
             
-            NSString *categoryName = [[parentGroup displayName] stringByAppendingPathComponent:kKeyLocalizable];
+            NSString *categoryName = [[parentGroup displayName] stringByAppendingPathComponent:stringsFileNamesWithoutExtension];
             if(![self.translationFiles objectForKey:categoryName])
                 [self.translationFiles setObject:[NSMutableArray array] forKey:categoryName];
             
@@ -218,7 +228,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
         }
         
         [self executeGenStringsAtPath:[self.project.filePath stringByDeletingLastPathComponent] withRoutine:genstringsRoutine positionalParameters:includePositionalParameters];
-        SCReader *genstringsOutputReader = [[SCReader alloc] initWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:kKeyStringsFile]];
+        SCReader *genstringsOutputReader = [[SCReader alloc] initWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:stringsFileName]];
         NSString *comment, *key, *translation;
         while([genstringsOutputReader getNextComment:&comment key:&key translation:&translation]) {
             [self.translationsDictionary setObject:[NSMutableDictionary dictionaryWithObject:comment forKey:kKeyComment] forKey:key];

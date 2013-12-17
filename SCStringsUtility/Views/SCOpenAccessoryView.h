@@ -12,5 +12,6 @@
 
 - (NSString*)genstringsRoutine;
 - (BOOL)shouldAddPositionalParameters;
+- (NSString*)stringsFileName;
 
 @end

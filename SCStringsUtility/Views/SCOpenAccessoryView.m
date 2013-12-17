@@ -10,6 +10,7 @@
 
 @interface SCOpenAccessoryView ()
 @property (nonatomic, weak) IBOutlet NSTextField *genstringsRoutineTextField;
+@property (nonatomic, weak) IBOutlet NSTextField *stringsFileNameTextField;
 @property (nonatomic, weak) IBOutlet NSButton *shouldAddPositionalParametersButton;
 @end
 
@@ -24,6 +25,11 @@
 - (BOOL)shouldAddPositionalParameters
 {
     return self.shouldAddPositionalParametersButton.state;
+}
+
+- (NSString*)stringsFileName
+{
+    return self.stringsFileNameTextField.stringValue;
 }
 
 @end
