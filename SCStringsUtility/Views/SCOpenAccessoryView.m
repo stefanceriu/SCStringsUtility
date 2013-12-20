@@ -29,7 +29,8 @@
 
 - (NSString*)stringsFileName
 {
-    return self.stringsFileNameTextField.stringValue;
+    NSString *fileName = self.stringsFileNameTextField.stringValue;
+    return fileName.length > 0 ? fileName : nil;
 }
 
 @end

@@ -195,13 +195,10 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     self.sourceFilePath = nil;
     self.sourceType = SCFileTypeXcodeProject;
     
-    NSString *stringsFileNamesWithoutExtension = nil;
-    
-    if (![stringsFileName length]) {
+    if (stringsFileName.length == 0) {
         stringsFileName = kKeyStringsFile;
-        stringsFileNamesWithoutExtension = kKeyLocalizable;
-    } else {
-        stringsFileNamesWithoutExtension = [stringsFileName stringByDeletingPathExtension];
+    } else if(stringsFileName.pathExtension.length == 0) {
+        stringsFileName = [stringsFileName stringByAppendingPathExtension:kKeyStringsFile.pathExtension];
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -216,7 +213,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
             
             XCGroup *parentGroup = [[self.project groupForGroupMemberWithKey:file.key] parentGroup];
             
-            NSString *categoryName = [[parentGroup displayName] stringByAppendingPathComponent:stringsFileNamesWithoutExtension];
+            NSString *categoryName = [[parentGroup displayName] stringByAppendingPathComponent:[stringsFileName stringByDeletingPathExtension]];
             if(![self.translationFiles objectForKey:categoryName])
                 [self.translationFiles setObject:[NSMutableArray array] forKey:categoryName];
             
