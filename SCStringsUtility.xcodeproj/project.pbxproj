@@ -15,7 +15,7 @@
 		1843F4531650EB9900CEDBEF /* icon-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 1843F44F1650EB9900CEDBEF /* icon-save.png */; };
 		1852D07816D01F8D00574822 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1852D07716D01F8D00574822 /* icon.icns */; };
 		186758CD1654C83F00BEE1E1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186758CC1654C83F00BEE1E1 /* MainMenu.xib */; };
-		1878321816BECEC800A8C760 /* XcodeEditor.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18F0D44F16BECE6800CC0264 /* XcodeEditor.framework */; };
+		1878321816BECEC800A8C760 /* XcodeEditor.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18F0D44F16BECE6800CC0264 /* XcodeEditor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		18D185A516C050E00082E573 /* NSData+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859216C050E00082E573 /* NSData+SCAdditions.m */; };
 		18D185A616C050E00082E573 /* NSString+SCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859416C050E00082E573 /* NSString+SCAdditions.m */; };
 		18D185A716C050E00082E573 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D1859616C050E00082E573 /* OrderedDictionary.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -244,7 +244,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SC;
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Stefan Ceriu";
 			};
 			buildConfigurationList = 18D36745162772B500B6BACE /* Build configuration list for PBXProject "SCStringsUtility" */;
@@ -321,7 +321,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -349,7 +348,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

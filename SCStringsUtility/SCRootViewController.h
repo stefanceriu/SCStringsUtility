@@ -8,6 +8,4 @@
 
 @interface SCRootViewController : NSViewController
 
-@property(nonatomic, weak) NSMenu *menu;
-
 @end

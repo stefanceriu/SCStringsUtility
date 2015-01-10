@@ -13,7 +13,6 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self.rootViewController setMenu:self.menu];    
     [self.window setContentView:self.rootViewController.view];
 }
 
