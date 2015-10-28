@@ -246,7 +246,7 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     
     NSString *tempFilePath = NSTemporaryDirectory();
     
-    NSString *argument = [NSString stringWithFormat:@"find ./ -name *.m -print0| xargs -0 genstrings -o %@", tempFilePath];
+    NSString *argument = [NSString stringWithFormat:@"find ./ -name *.m -print0 -o -name *.swift -print0 | xargs -0 genstrings -o %@", tempFilePath];
     if([routine length]) argument = [argument stringByAppendingString:[NSString stringWithFormat:@" -s %@", routine]];
     if(!positionalParameters) argument = [argument stringByAppendingString:@" -noPositionalParameters"];
     
