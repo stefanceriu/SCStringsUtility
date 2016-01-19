@@ -244,13 +244,19 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
     [task setLaunchPath: @"/bin/sh"];
     [task setCurrentDirectoryPath:path];
     
-    NSString *tempFilePath = NSTemporaryDirectory();
+    NSMutableString *argumentsString = [NSMutableString stringWithString:@"find ./ \\( -name *.m -o -name *.swift \\) -exec genstrings -a"];
     
-    NSString *argument = [NSString stringWithFormat:@"find ./ -name *.m -print0 -o -name *.swift -print0 | xargs -0 genstrings -o %@", tempFilePath];
-    if([routine length]) argument = [argument stringByAppendingString:[NSString stringWithFormat:@" -s %@", routine]];
-    if(!positionalParameters) argument = [argument stringByAppendingString:@" -noPositionalParameters"];
+    if([routine length]) {
+        [argumentsString appendString:[NSString stringWithFormat:@" -s %@", routine]];
+    }
     
-    [task setArguments:@[@"-c", argument]];
+    if(!positionalParameters) {
+        [argumentsString appendString:@" -noPositionalParameters"];
+    }
+    
+    [argumentsString appendFormat:@" -o %@ {} \\;", NSTemporaryDirectory()];
+    
+    [task setArguments:@[@"-c", argumentsString]];
     
     NSPipe *pipe = [NSPipe pipe];
     [task setStandardOutput: pipe];

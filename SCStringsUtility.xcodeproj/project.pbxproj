@@ -244,7 +244,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SC;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Stefan Ceriu";
 			};
 			buildConfigurationList = 18D36745162772B500B6BACE /* Build configuration list for PBXProject "SCStringsUtility" */;
@@ -325,6 +325,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -377,6 +378,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCStringsUtility/SCStringsUtility-Prefix.pch";
 				INFOPLIST_FILE = "SCStringsUtility/SCStringsUtility-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stefanceriu.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = SCStringsUtility;
 				WRAPPER_EXTENSION = app;
 			};
@@ -395,6 +397,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SCStringsUtility/SCStringsUtility-Prefix.pch";
 				INFOPLIST_FILE = "SCStringsUtility/SCStringsUtility-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stefanceriu.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = SCStringsUtility;
 				WRAPPER_EXTENSION = app;
 			};
