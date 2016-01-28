@@ -224,8 +224,12 @@ static NSString *kKeyStringsFile = @"Localizable.strings";
             [fileParent sortUsingDescriptors:@[sortByLanguage]];
         }
         
+        NSString *stringsFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:stringsFileName];
+        [[NSFileManager defaultManager] removeItemAtPath:stringsFilePath error:nil];
+        
         [self executeGenStringsAtPath:[self.project.filePath stringByDeletingLastPathComponent] withRoutine:genstringsRoutine positionalParameters:includePositionalParameters];
-        SCReader *genstringsOutputReader = [[SCReader alloc] initWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:stringsFileName]];
+        
+        SCReader *genstringsOutputReader = [[SCReader alloc] initWithPath:stringsFilePath];
         NSString *comment, *key, *translation;
         while([genstringsOutputReader getNextComment:&comment key:&key translation:&translation]) {
             [self.translationsDictionary setObject:[NSMutableDictionary dictionaryWithObject:comment forKey:kKeyComment] forKey:key];
