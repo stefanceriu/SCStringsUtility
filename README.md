@@ -37,4 +37,4 @@ SCStringsUtility is released under the GNU GENERAL PUBLIC LICENSE (see the LICEN
 
 ## Contact
 
-Feel free to contact me at stefan.ceriu@yahoo.com or https://twitter.com/stefanceriu
+Feel free to contact me at stefan.ceriu@gmail.com or https://twitter.com/stefanceriu
