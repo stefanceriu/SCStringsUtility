@@ -2,7 +2,7 @@
 
 SCStringsUtility is an OS X Application built for easing the way we deal with localizable strings. It started off as a simple to/from CSV utility but ended up being a little bit more than that.
 
-![SCStringsUtility](https://drive.google.com/uc?export=download&id=0ByLCkUO90ltoMmNqcjR2SFNVTDQ)
+![SCStringsUtility](https://drive.google.com/u/0/uc?id=10mzG3ZZqpuCRacH1jmb9_H9iNN8QLS3Y&export=download)
 
 ## Features
 * Import from Xcode project using genstrings and its .string files (options for a different genstrings routine and positional parameters)
